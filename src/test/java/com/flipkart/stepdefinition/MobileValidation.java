@@ -1,5 +1,7 @@
 package com.flipkart.stepdefinition;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -8,19 +10,23 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import com.flipkart.resources.CommanActions;
+
 import org.junit.Assert;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import io.cucumber.datatable.DataTable;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class MobileValidation {
+public class MobileValidation extends CommanActions {
 	static WebDriver driver;
 	static long startTime;
     static String name1;
-
-
+    static String mn;
+    CommanActions ca = new CommanActions();
 @Given("user launches flipkart application")
 public void user_launches_flipkart_application() {
 	WebDriverManager.chromedriver().setup();
@@ -35,8 +41,7 @@ public void user_launches_flipkart_application() {
 public void user_login_by_entering_valid_crendentials() {
 	try {
 		WebElement close = driver.findElement(By.xpath("//button[text()='✕']"));
-		close.click();
-		
+		ca.button(close);		
 	}catch(Exception e) {
 	
 	} 
@@ -45,18 +50,19 @@ public void user_login_by_entering_valid_crendentials() {
 
 @When("user search mobile")
 public void user_search_mobile() {
+	mn = "realme";
 	WebElement search = driver.findElement(By.name("q"));
-	 search.sendKeys("realme",Keys.ENTER);
+	ca.insertText(search, mn);
 	
    
 }
 
 @When("user click on the mobile name")
 public void user_click_on_the_mobile_name() {
-	WebElement mobilename = driver.findElement(By.xpath("(//div[contains(text(),'realme')])[1]"));
+	WebElement mobilename = driver.findElement(By.xpath("(//div[contains(text(),'"+mn+"')])[1]"));
 	 name1 = mobilename.getText();
 	 System.out.println(name1);
-	 mobilename.click();
+	 ca.button(mobilename);
     
 }
 
@@ -70,14 +76,46 @@ public void user_validate_the_mobile_names() {
 				 
 			 }
 		 }
-		 WebElement mobilename2 = driver.findElement(By.xpath("//span[contains(text(),'realme')]"));
+		 WebElement mobilename2 = driver.findElement(By.xpath("//span[contains(text(),'"+mn+"')]"));
 		 Assert.assertTrue(mobilename2.isDisplayed());
 		 String name2 = mobilename2.getText();
 		 System.out.println(name2); 
 		
 		 
 	     Assert.assertEquals(name1, name2);
+		 driver.quit();
+	     
    
 }
+
+@When("user search mobile by one dim list")
+public void user_search_mobile_by_one_dim_list(DataTable dataTable) {
+
+  List<String> datas =   dataTable.asList();
+	mn = datas.get(0);
+  WebElement search = driver.findElement(By.name("q"));
+  ca.insertText(search, mn);
+	
+  
+}
+@When("user search mobile by one dim map")
+
+public void user_search_mobile_by_one_dim_map(DataTable dataTable) {
+	
+ Map<String, String> datas = dataTable.asMap(String.class, String.class);
+   mn = datas.get("1");
+  WebElement search = driver.findElement(By.name("q"));
+  ca.insertText(search, mn);
+}
+@When("user search mobile {string}")
+public void user_search_mobile(String phone) {
+	phone = mn;
+	 WebElement search = driver.findElement(By.name("q"));
+	 ca.insertText(search, phone);
+
+	
+    
+}
+
 
 }
