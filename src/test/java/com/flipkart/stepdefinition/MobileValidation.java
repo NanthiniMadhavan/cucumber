@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import com.flipkart.objectrepository.MobileValidationPage;
 import com.flipkart.resources.CommanActions;
 
 import org.junit.Assert;
@@ -27,6 +28,7 @@ public class MobileValidation extends CommanActions {
     static String name1;
     static String mn;
     CommanActions ca = new CommanActions();
+    MobileValidationPage m = new  MobileValidationPage();
 @Given("user launches flipkart application")
 public void user_launches_flipkart_application() {
 	WebDriverManager.chromedriver().setup();
@@ -40,8 +42,8 @@ public void user_launches_flipkart_application() {
 @Given("user login by entering valid crendentials")
 public void user_login_by_entering_valid_crendentials() {
 	try {
-		WebElement close = driver.findElement(By.xpath("//button[text()='✕']"));
-		ca.button(close);		
+		ca.button(m.getCloseIcon());;
+				
 	}catch(Exception e) {
 	
 	} 
@@ -51,8 +53,9 @@ public void user_login_by_entering_valid_crendentials() {
 @When("user search mobile")
 public void user_search_mobile() {
 	mn = "realme";
-	WebElement search = driver.findElement(By.name("q"));
-	ca.insertText(search, mn);
+	
+	
+	ca.insertText(m.getSearchBox(), mn);
 	
    
 }
@@ -93,8 +96,8 @@ public void user_search_mobile_by_one_dim_list(DataTable dataTable) {
 
   List<String> datas =   dataTable.asList();
 	mn = datas.get(0);
-  WebElement search = driver.findElement(By.name("q"));
-  ca.insertText(search, mn);
+  
+  ca.insertText(m.getSearchBox(), mn);
 	
   
 }
@@ -104,14 +107,19 @@ public void user_search_mobile_by_one_dim_map(DataTable dataTable) {
 	
  Map<String, String> datas = dataTable.asMap(String.class, String.class);
    mn = datas.get("1");
-  WebElement search = driver.findElement(By.name("q"));
-  ca.insertText(search, mn);
+   
+  
+  
+  ca.insertText(m.getSearchBox(), mn);
+  
 }
 @When("user search mobile {string}")
 public void user_search_mobile(String phone) {
 	phone = mn;
-	 WebElement search = driver.findElement(By.name("q"));
-	 ca.insertText(search, phone);
+	
+	
+	 
+	 ca.insertText(m.getSearchBox(), phone);
 
 	
     
